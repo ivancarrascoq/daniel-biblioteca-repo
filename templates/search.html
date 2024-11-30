@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar{% endblock %}
+
+{% block content %}
+<h1>Buscar Libro</h1>
+Se muestran hasta 10 mejores matches de una base de datos de {{ total }} libros.
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Titulo</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Publicado</th>
+            {% if session.get('logged_in') %}
+                <th scope="col">Operador</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.year }}</td>
+                {% if session.get('logged_in') %}
+                    <td>
+                        <a href="{{ url_for('update', id=book.id) }}" class="btn btn-primary btn-sm">Editar</a>
+                        <form method="POST" action="{{ url_for('delete', id=book.id) }}" style="display:inline;">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
